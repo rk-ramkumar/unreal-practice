@@ -8,13 +8,17 @@ AMyChCharacter::AMyChCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
-	bIsSprinting = false;
+	WalkSpeed = 600.0f;
+	SprintSpeed = 1200.0f;
 }
 
 // Called when the game starts or when spawned
 void AMyChCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+    // Set the MaxWalkSpeed
+	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 
 	if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
 	{
@@ -36,31 +40,36 @@ void AMyChCharacter::Tick(float DeltaTime)
 // Called to bind functionality to input
 void AMyChCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
-	{
-		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AMyChCharacter::Move);
-		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Triggered, this, &AMyChCharacter::Sprint);
-	}
-	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
-	PlayerInputComponent->BindAxis("Look", this, &APawn::AddControllerPitchInput);
-
+    Super::SetupPlayerInputComponent(PlayerInputComponent);
+    if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
+    {
+        EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AMyChCharacter::Move);
+        EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Started, this, &AMyChCharacter::StartSprinting);
+        EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Completed, this, &AMyChCharacter::StopSprinting);
+    }
+    PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
+    PlayerInputComponent->BindAxis("Look", this, &APawn::AddControllerPitchInput);
 }
 
 void AMyChCharacter::Move(const FInputActionValue& Value)
 {
-	FVector2D MovementVector = Value.Get<FVector2D>();
+    FVector2D MovementVector = Value.Get<FVector2D>();
 
-	if (Controller)
-	{
-		const float CurrentSpeed = bIsSprinting ? GetCharacterMovement()->MaxWalkSpeed * SprintMultiplier : GetCharacterMovement()->MaxWalkSpeed;
-		AddMovementInput(GetActorForwardVector(), MovementVector.Y * CurrentSpeed);
-		AddMovementInput(GetActorRightVector(), MovementVector.X * CurrentSpeed);
-	}
+    if (Controller)
+    {
+        const float CurrentSpeed = GetCharacterMovement()->MaxWalkSpeed;
+        AddMovementInput(GetActorForwardVector(), MovementVector.Y * CurrentSpeed / WalkSpeed);
+        AddMovementInput(GetActorRightVector(), MovementVector.X * CurrentSpeed / WalkSpeed);
+    }
 }
 
-void AMyChCharacter::Sprint(const FInputActionValue& Value)
+void AMyChCharacter::StartSprinting()
 {
-	bIsSprinting = Value.Get<bool>();
+    GetCharacterMovement()->MaxWalkSpeed = SprintSpeed;
+}
+
+void AMyChCharacter::StopSprinting()
+{
+    GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 }
 

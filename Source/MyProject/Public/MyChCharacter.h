@@ -40,15 +40,17 @@ public:
 	UInputMappingContext* DefaultMappingContext;
 
 	// Sprinting speed multiplier
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enhanced Input")
-	float SprintMultiplier = 2.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Speed")
+	float SprintSpeed;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Speed")
+	float WalkSpeed;
 
 	//Function to handle movement input
 	void Move(const FInputActionValue& Value);
 
 	//Function to handle sprinting input
-	void Sprint(const FInputActionValue& Value);
+	void StartSprinting();
+	void StopSprinting();
 
-private:
-	bool bIsSprinting;
 };
