@@ -4,6 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "EnhancedInputComponent.h"
+#include "EnhancedInputSubsystems.h"
+#include "InputAction.h"
+#include "InputMappingContext.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "MyChCharacter.generated.h"
 
 UCLASS()
@@ -22,8 +27,28 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enhanced Input")
+	UInputAction* MoveAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enhanced Input")
+	UInputAction* SprintAction;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enhanced Input")
+	UInputMappingContext* DefaultMappingContext;
+
+	// Sprinting speed multiplier
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enhanced Input")
+	float SprintMultiplier = 2.0f;
+
+	//Function to handle movement input
+	void Move(const FInputActionValue& Value);
+
+	//Function to handle sprinting input
+	void Sprint(const FInputActionValue& Value);
+
+private:
+	bool bIsSprinting;
 };
