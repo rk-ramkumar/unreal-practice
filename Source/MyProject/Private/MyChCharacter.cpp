@@ -46,6 +46,7 @@ void AMyChCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
         EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AMyChCharacter::Move);
         EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Started, this, &AMyChCharacter::StartSprinting);
         EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Completed, this, &AMyChCharacter::StopSprinting);
+        EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AMyChCharacter::Look);
     }
     PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
     PlayerInputComponent->BindAxis("Look", this, &APawn::AddControllerPitchInput);
@@ -55,7 +56,7 @@ void AMyChCharacter::Move(const FInputActionValue& Value)
 {
     FVector2D MovementVector = Value.Get<FVector2D>();
 
-    if (Controller)
+    if (IsValid(Controller))
     {
         const float CurrentSpeed = GetCharacterMovement()->MaxWalkSpeed;
         AddMovementInput(GetActorForwardVector(), MovementVector.Y * CurrentSpeed / WalkSpeed);
@@ -66,6 +67,17 @@ void AMyChCharacter::Move(const FInputActionValue& Value)
 void AMyChCharacter::StartSprinting()
 {
     GetCharacterMovement()->MaxWalkSpeed = SprintSpeed;
+}
+
+void AMyChCharacter::Look(const FInputActionValue &Value)
+{
+    FVector2D LookVector = Value.Get<FVector2D>();
+
+    if (IsValid(Controller))
+    {
+        AddControllerYawInput(LookVector.X);
+        AddControllerPitchInput(LookVector.Y);
+    }
 }
 
 void AMyChCharacter::StopSprinting()

@@ -35,6 +35,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enhanced Input")
 	UInputAction* SprintAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enhanced Input")
+	UInputAction* LookAction;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enhanced Input")
 	UInputMappingContext* DefaultMappingContext;
@@ -46,11 +49,14 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Speed")
 	float WalkSpeed;
 
+protected:
 	//Function to handle movement input
 	void Move(const FInputActionValue& Value);
 
 	//Function to handle sprinting input
 	void StartSprinting();
 	void StopSprinting();
+	
+	void Look(const FInputActionValue &Value);
 
 };
