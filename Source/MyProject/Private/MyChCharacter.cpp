@@ -47,6 +47,7 @@ void AMyChCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
         EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Started, this, &AMyChCharacter::StartSprinting);
         EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Completed, this, &AMyChCharacter::StopSprinting);
         EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AMyChCharacter::Look);
+        EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &AMyChCharacter::Jump);
     }
     PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
     PlayerInputComponent->BindAxis("Look", this, &APawn::AddControllerPitchInput);
@@ -85,3 +86,7 @@ void AMyChCharacter::StopSprinting()
     GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 }
 
+void AMyChCharacter::Jump()
+{
+    ACharacter::Jump();
+}

@@ -38,6 +38,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enhanced Input")
 	UInputAction* LookAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enhanced Input")
+	UInputAction* JumpAction;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enhanced Input")
 	UInputMappingContext* DefaultMappingContext;
@@ -59,4 +62,5 @@ protected:
 	
 	void Look(const FInputActionValue &Value);
 
+	void Jump();
 };
