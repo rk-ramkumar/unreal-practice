@@ -58,8 +58,8 @@ void AMyChCharacter::Move(const FInputActionValue& Value)
     if (IsValid(Controller))
     {
         const float CurrentSpeed = GetCharacterMovement()->MaxWalkSpeed;
-        AddMovementInput(GetActorForwardVector(), MovementVector.Y * CurrentSpeed / WalkSpeed);
-        AddMovementInput(GetActorRightVector(), MovementVector.X * CurrentSpeed / WalkSpeed);
+        AddMovementInput(GetActorForwardVector(), MovementVector.Y);
+        AddMovementInput(GetActorRightVector(), MovementVector.X);
     }
 }
 
@@ -74,8 +74,9 @@ void AMyChCharacter::Look(const FInputActionValue &Value)
 
     if (IsValid(Controller))
     {
-        AddControllerYawInput(LookVector.X);
-        AddControllerPitchInput(LookVector.Y);
+        float LookSensitivity = 1.0f;
+        AddControllerYawInput(LookVector.X * LookSensitivity);
+        AddControllerPitchInput(LookVector.Y * LookSensitivity);
     }
 }
 
