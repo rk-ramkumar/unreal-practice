@@ -49,8 +49,6 @@ void AMyChCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
         EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AMyChCharacter::Look);
         EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &AMyChCharacter::Jump);
     }
-    PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
-    PlayerInputComponent->BindAxis("Look", this, &APawn::AddControllerPitchInput);
 }
 
 void AMyChCharacter::Move(const FInputActionValue& Value)
